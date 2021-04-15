@@ -86,15 +86,70 @@ const planoDeFundo = {
     }
 }
 
+const telaInicio = {
+    sX: 134,
+    sY: 0,
+    w: 174,
+    h: 152,
+    x: (canvas.width / 2) - 174 / 2,
+    y: 50,
+    desenha() {
+        contexto.drawImage(
+            sprites, 
+            telaInicio.sX, telaInicio.sY, // sprite x, sprite y
+            telaInicio.w, telaInicio.h, // tamanho do recorte na sprite
+            telaInicio.x, telaInicio.y, // localização no papel
+            telaInicio.w, telaInicio.h, // tamanho no papel
+        )    
+    }    
+}
+
+let telaAtiva = {}
+function mudaParaTela(novaTela) {
+    telaAtiva = novaTela
+}
+
+const Telas = {
+    INICIO: {
+        desenha() {
+            planoDeFundo.desenha()
+            chao.desenha()
+            flappyBird.desenha()
+            telaInicio.desenha()
+        },
+        click() {
+            mudaParaTela(Telas.JOGO)
+        },
+        atualiza() {
+            
+        }
+    }
+}
+
+Telas.JOGO = {
+    desenha () {
+        planoDeFundo.desenha()
+        chao.desenha()
+        flappyBird.desenha()
+    },
+    atualiza(){
+        flappyBird.atualiza()
+    }
+}
+
 function loop() {
     
-    flappyBird.atualiza()
-    planoDeFundo.desenha()
-    chao.desenha()
-    flappyBird.desenha()
-    
+    telaAtiva.desenha()
+    telaAtiva.atualiza()
 
     requestAnimationFrame(loop)
 }
 
+window.addEventListener('click', function() {
+    if(telaAtiva.click) {
+        telaAtiva.click()
+    }
+})
+
+mudaParaTela(Telas.INICIO)
 loop()

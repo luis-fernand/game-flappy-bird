@@ -1,21 +1,25 @@
 console.log('[Ferdinand] Flappy Bird')
 
+const som_HIT = new Audio ()
+som_HIT.src = './effects/effects_hit.wav'
+
 const sprites = new Image()
 sprites.src = './sprites.png'
 
 const canvas = document.querySelector('canvas')
 const contexto = canvas.getContext('2d')
 
-function fazColisao(flappyBird, chao){
+function fazColisao(flappyBird, chao) {
     const flappyBirdY = flappyBird.y + flappyBird.altura
     const chaoY = chao.y
 
-    if(flappyBirdY >= chaoY){
+    if(flappyBirdY >= chaoY) {
         return true
     }
 
     return false
 }
+
 function criaFlappyBird() {
     const flappyBird = {
         spriteX: 0,
@@ -27,15 +31,21 @@ function criaFlappyBird() {
         pulo: 4.6,
         pula() {
             console.log('devo pular')
+            console.log('[antes]', flappyBird.velocidade)
             flappyBird.velocidade = - flappyBird.pulo
+            console.log('[depois]', flappyBird.velocidade)
         },
         gravidade: 0.25,
         velocidade: 0,
-        atualiza () {
-            if (fazColisao(flappyBird, chao)){
+        atualiza() {
+            if(fazColisao(flappyBird, chao)) {
             console.log('Fez colisao')
+            som_HIT.play()
 
-            mudaParaTela(Telas.INICIO)
+            setTimeout(() => {
+                mudaParaTela(Telas.INICIO)
+            }, 500)
+            
             return
             }
 
@@ -55,7 +65,13 @@ function criaFlappyBird() {
     return flappyBird
 }
 
+/*
+Chão
+*/
 
+function criaChao() {
+    
+}
 
 const chao = {
     spriteX: 0,
@@ -64,6 +80,9 @@ const chao = {
     altura: 112,
     x: 0,
     y: canvas.height - 112,
+    atualiza() {
+
+    },
     desenha() {
         contexto.drawImage(
             sprites, 
@@ -139,8 +158,8 @@ let telaAtiva = {}
 function mudaParaTela(novaTela) {
     telaAtiva = novaTela
 
-    if(telaAtiva.inicializa){
-        inicializa()   
+    if(telaAtiva.inicializa){ 
+        telaAtiva.inicializa()   
     }
 }
 
@@ -173,7 +192,7 @@ Telas.JOGO = {
     click() {
         globais.flappyBird.pula() 
     },
-    atualiza(){
+    atualiza() {
         globais.flappyBird.atualiza()
     }
 }

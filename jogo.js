@@ -70,27 +70,32 @@ Chão
 */
 
 function criaChao() {
-    
-}
-
-const chao = {
-    spriteX: 0,
-    spriteY: 610,
-    largura: 224,
-    altura: 112,
-    x: 0,
-    y: canvas.height - 112,
-    atualiza() {
-
-    },
-    desenha() {
-        contexto.drawImage(
+    const chao = {
+        spriteX: 0,
+        spriteY: 610,
+        largura: 224,
+        altura: 112,
+        x: 0,
+        y: canvas.height - 112,
+        atualiza() {
+            const movimentoDoChao = 1
+            const repeteEm = chao.largura / 2
+            const movimentacao = chao.x - movimentoDoChao
+            
+            // console.log('[chao.x]', chao.x)
+            // console.log('[repeteEm]', repeteEm)
+            // console.log('[moveimentacao]', movimentacao % repeteEm)
+        
+            chao.x = movimentacao % repeteEm
+        },
+        desenha() {
+            contexto.drawImage(
             sprites, 
             chao.spriteX, chao.spriteY, // sprite x, sprite y
             chao.largura, chao.altura, // tamanho do recorte na sprite
             chao.x, chao.y, // localização no papel
             chao.largura, chao.altura, // tamanho no papel
-        )
+            )
 
         contexto.drawImage(
             sprites, 
@@ -98,9 +103,13 @@ const chao = {
             chao.largura, chao.altura, // tamanho do recorte na sprite
             (chao.x + chao.largura), chao.y, // localização no papel
             chao.largura, chao.altura, // tamanho no papel
-        )    
-    }    
+            )    
+        },    
+    }
+    return chao
 }
+
+
 
 const planoDeFundo = {
     spriteX: 390,
@@ -167,10 +176,11 @@ const Telas = {
     INICIO: {
         inicializa() {
             globais.flappyBird = criaFlappyBird()
+            globais.chao = criaChao()
         },
         desenha() {
             planoDeFundo.desenha()
-            chao.desenha()
+            globais.chao.desenha()
             globais.flappyBird.desenha()
             telaInicio.desenha()
         },
@@ -178,7 +188,7 @@ const Telas = {
             mudaParaTela(Telas.JOGO)
         },
         atualiza() {
-            
+            globais.chao.atualiza()    
         }
     }
 }
@@ -186,7 +196,7 @@ const Telas = {
 Telas.JOGO = {
     desenha () {
         planoDeFundo.desenha()
-        chao.desenha()
+        globais.chao.desenha()
         globais.flappyBird.desenha()
     },
     click() {
